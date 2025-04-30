@@ -19,7 +19,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.3.0|^8.0",
-        "jaybizzle/laravel-crawler-detect": "1.*"
+        "jaybizzle/laravel-crawler-detect": "1.*",
+        "laravelcollective/html": "^6.4"
     },
     "autoload": {
         "psr-4": {
