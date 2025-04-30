@@ -70,16 +70,22 @@ class LaravelLoggerController extends BaseController
      */
     public function showAccessLog(Request $request)
     {
-        if (config('LaravelLogger.loggerPaginationEnabled')) {
-            $activities = config('laravel-logger.defaultActivityModel')::orderBy('created_at', 'desc');
+        if (config('LaravelLogger.loggerCursorPaginationEnabled')) {
+            $activities = config('LaravelLogger.defaultActivityModel')::orderBy('created_at', 'desc');
             if (config('LaravelLogger.enableSearch')) {
                 $activities = $this->searchActivityLog($activities, $request);
             }
-            $activities = $activities->paginate(config('LaravelLogger.loggerPaginationPerPage'));
+            $activities = $activities->cursorPaginate(config('LaravelLogger.loggerPaginationPerPage'))->withQueryString();
+            $totalActivities = 0;
+        } elseif (config('LaravelLogger.loggerPaginationEnabled')) {
+            $activities = config('LaravelLogger.defaultActivityModel')::orderBy('created_at', 'desc');
+            if (config('LaravelLogger.enableSearch')) {
+                $activities = $this->searchActivityLog($activities, $request);
+            }
+            $activities = $activities->paginate(config('LaravelLogger.loggerPaginationPerPage'))->withQueryString();
             $totalActivities = $activities->total();
         } else {
-            $activities = config('laravel-logger.defaultActivityModel')::orderBy('created_at', 'desc');
-
+            $activities = config('LaravelLogger.defaultActivityModel')::orderBy('created_at', 'desc');
             if (config('LaravelLogger.enableSearch')) {
                 $activities = $this->searchActivityLog($activities, $request);
             }
@@ -89,7 +95,13 @@ class LaravelLoggerController extends BaseController
 
         self::mapAdditionalDetails($activities);
 
-        $users = config('LaravelLogger.defaultUserModel')::all();
+        if (config('LaravelLogger.enableLiveSearch')) {
+            // We are querying only the paginated userIds because in a big application querying all user data is performance heavy
+            $user_ids = array_unique($activities->pluck('userId')->toArray());
+            $users = config('LaravelLogger.defaultUserModel')::whereIn(config('LaravelLogger.defaultUserIDField'), $user_ids)->get();
+        } else {
+            $users = config('LaravelLogger.defaultUserModel')::all();
+        }
 
         $data = [
             'activities'        => $activities,
@@ -110,7 +122,7 @@ class LaravelLoggerController extends BaseController
      */
     public function showAccessLogEntry(Request $request, $id)
     {
-        $activity = config('laravel-logger.defaultActivityModel')::findOrFail($id);
+        $activity = config('LaravelLogger.defaultActivityModel')::findOrFail($id);
 
         $userDetails = config('LaravelLogger.defaultUserModel')::find($activity->userId);
         $userAgentDetails = UserAgentDetails::details($activity->userAgent);
@@ -119,13 +131,18 @@ class LaravelLoggerController extends BaseController
         $eventTime = Carbon::parse($activity->created_at);
         $timePassed = $eventTime->diffForHumans();
 
-        if (config('LaravelLogger.loggerPaginationEnabled')) {
-            $userActivities = config('laravel-logger.defaultActivityModel')::where('userId', $activity->userId)
+        if (config('LaravelLogger.loggerCursorPaginationEnabled')) {
+            $userActivities = config('LaravelLogger.defaultActivityModel')::where('userId', $activity->userId)
+                ->orderBy('created_at', 'desc')
+                ->cursorPaginate(config('LaravelLogger.loggerPaginationPerPage'));
+            $totalUserActivities = 0;
+        } elseif (config('LaravelLogger.loggerPaginationEnabled')) {
+            $userActivities = config('LaravelLogger.defaultActivityModel')::where('userId', $activity->userId)
             ->orderBy('created_at', 'desc')
             ->paginate(config('LaravelLogger.loggerPaginationPerPage'));
             $totalUserActivities = $userActivities->total();
         } else {
-            $userActivities = config('laravel-logger.defaultActivityModel')::where('userId', $activity->userId)
+            $userActivities = config('LaravelLogger.defaultActivityModel')::where('userId', $activity->userId)
             ->orderBy('created_at', 'desc')
             ->get();
             $totalUserActivities = $userActivities->count();
@@ -157,7 +174,7 @@ class LaravelLoggerController extends BaseController
      */
     public function clearActivityLog(Request $request)
     {
-        $activities = config('laravel-logger.defaultActivityModel')::all();
+        $activities = config('LaravelLogger.defaultActivityModel')::all();
         foreach ($activities as $activity) {
             $activity->delete();
         }
@@ -172,13 +189,18 @@ class LaravelLoggerController extends BaseController
      */
     public function showClearedActivityLog()
     {
-        if (config('LaravelLogger.loggerPaginationEnabled')) {
-            $activities = config('laravel-logger.defaultActivityModel')::onlyTrashed()
+        if (config('LaravelLogger.loggerCursorPaginationEnabled')) {
+            $activities = config('LaravelLogger.defaultActivityModel')::onlyTrashed()
+                ->orderBy('created_at', 'desc')
+                ->paginate(config('LaravelLogger.loggerPaginationPerPage'));
+            $totalActivities = 0;
+        } elseif (config('LaravelLogger.loggerPaginationEnabled')) {
+            $activities = config('LaravelLogger.defaultActivityModel')::onlyTrashed()
             ->orderBy('created_at', 'desc')
             ->paginate(config('LaravelLogger.loggerPaginationPerPage'));
             $totalActivities = $activities->total();
         } else {
-            $activities = config('laravel-logger.defaultActivityModel')::onlyTrashed()
+            $activities = config('LaravelLogger.defaultActivityModel')::onlyTrashed()
             ->orderBy('created_at', 'desc')
             ->get();
             $totalActivities = $activities->count();
@@ -235,7 +257,7 @@ class LaravelLoggerController extends BaseController
      */
     private static function getClearedActvity($id)
     {
-        $activity = config('laravel-logger.defaultActivityModel')::onlyTrashed()->where('id', $id)->get();
+        $activity = config('LaravelLogger.defaultActivityModel')::onlyTrashed()->where('id', $id)->get();
         if (count($activity) != 1) {
             return abort(404);
         }
@@ -252,7 +274,7 @@ class LaravelLoggerController extends BaseController
      */
     public function destroyActivityLog(Request $request)
     {
-        $activities = config('laravel-logger.defaultActivityModel')::onlyTrashed()->get();
+        $activities = config('LaravelLogger.defaultActivityModel')::onlyTrashed()->get();
         foreach ($activities as $activity) {
             $activity->forceDelete();
         }
@@ -269,7 +291,7 @@ class LaravelLoggerController extends BaseController
      */
     public function restoreClearedActivityLog(Request $request)
     {
-        $activities = config('laravel-logger.defaultActivityModel')::onlyTrashed()->get();
+        $activities = config('LaravelLogger.defaultActivityModel')::onlyTrashed()->get();
         foreach ($activities as $activity) {
             $activity->restore();
         }
@@ -285,28 +307,46 @@ class LaravelLoggerController extends BaseController
      *
      * @return filtered query
      */
-    public function searchActivityLog($query, $requeset)
+    public function searchActivityLog($query, $request)
     {
-        if (in_array('description', explode(',', config('LaravelLogger.searchFields'))) && $requeset->get('description')) {
-            $query->where('description', 'like', '%'.$requeset->get('description').'%');
+        if (in_array('description', explode(',', config('LaravelLogger.searchFields'))) && $request->get('description')) {
+            $query->where('description', 'like', '%'.$request->get('description').'%');
         }
 
-        if (in_array('user', explode(',', config('LaravelLogger.searchFields'))) && $requeset->get('user')) {
-            $query->where('userId', '=', $requeset->get('user'));
+        if (in_array('user', explode(',', config('LaravelLogger.searchFields'))) && (int) $request->get('user')) {
+            $query->where('userId', '=', (int) $request->get('user'));
         }
 
-        if (in_array('method', explode(',', config('LaravelLogger.searchFields'))) && $requeset->get('method')) {
-            $query->where('methodType', '=', $requeset->get('method'));
+        if (in_array('method', explode(',', config('LaravelLogger.searchFields'))) && $request->get('method')) {
+            $query->where('methodType', '=', $request->get('method'));
         }
 
-        if (in_array('route', explode(',', config('LaravelLogger.searchFields'))) && $requeset->get('route')) {
-            $query->where('route', 'like', '%'.$requeset->get('route').'%');
+        if (in_array('route', explode(',', config('LaravelLogger.searchFields'))) && $request->get('route')) {
+            $query->where('route', 'like', '%'.$request->get('route').'%');
         }
 
-        if (in_array('ip', explode(',', config('LaravelLogger.searchFields'))) && $requeset->get('ip_address')) {
-            $query->where('ipAddress', 'like', '%'.$requeset->get('ip_address').'%');
+        if (in_array('ip', explode(',', config('LaravelLogger.searchFields'))) && $request->get('ip_address')) {
+            $query->where('ipAddress', 'like', '%'.$request->get('ip_address').'%');
         }
 
         return $query;
+    }
+
+    /**
+     * Search the database users according to specific criteria.
+     *
+     * @param request
+     *
+     * @return filtered user data
+     */
+    public function liveSearch(Request $request)
+    {
+        $filteredUsers = config('LaravelLogger.defaultUserModel')::when(request('userid'), function ($q) {
+            return $q->where(config('LaravelLogger.defaultUserIDField'), (int) request('userid', 0));
+        })->when(request('email'), function ($q) {
+            return $q->where('email', 'like', '%'.request('email').'%');
+        });
+
+        return response()->json($filteredUsers->get()->pluck('email', config('LaravelLogger.defaultUserIDField')), 200);
     }
 }

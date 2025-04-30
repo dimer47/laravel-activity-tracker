@@ -23,6 +23,8 @@
 @include('LaravelLogger::partials.scripts', ['activities' => $activities])
 @include('LaravelLogger::scripts.confirm-modal', ['formTrigger' => '#confirmDelete'])
 
+
+
 @if(config('LaravelLogger.enableDrillDown'))
 @include('LaravelLogger::scripts.clickable-row')
 @include('LaravelLogger::scripts.tooltip')
@@ -57,6 +59,11 @@
 @section('content')
 
     <div class="container-fluid">
+
+       @if(config('LaravelLogger.enableLiveSearch'))
+       @include('LaravelLogger::partials.form-live-search')
+       @endif
+
        @if(config('LaravelLogger.enableSearch'))
        @include('LaravelLogger::partials.form-search')
        @endif
@@ -74,11 +81,13 @@
 
                             <span>
                                 {!! trans('LaravelLogger::laravel-logger.dashboard.title') !!}
-                                <small>
-                                    <sup class="label label-default">
-                                        {{ $totalActivities }} {!! trans('LaravelLogger::laravel-logger.dashboard.subtitle') !!}
-                                    </sup>
-                                </small>
+                                @if(! config('LaravelLogger.loggerCursorPaginationEnabled'))
+                                    <small>
+                                        <sup class="label label-default">
+                                            {{ $totalActivities }} {!! trans('LaravelLogger::laravel-logger.dashboard.subtitle') !!}
+                                        </sup>
+                                    </small>
+                                @endif
                             </span>
 
                             <div class="btn-group pull-right btn-group-xs">
@@ -113,12 +122,14 @@
 
                             @else
                             {!! trans('LaravelLogger::laravel-logger.dashboard.title') !!}
-                            <span class="pull-right label label-default">
-                                {{ $totalActivities }}
-                                <span class="hidden-sms">
-                                    {!! trans('LaravelLogger::laravel-logger.dashboard.subtitle') !!}
-                                </span>
-                            </span>
+                                @if(! config('LaravelLogger.loggerCursorPaginationEnabled'))
+                                    <span class="pull-right label label-default">
+                                        {{ $totalActivities }}
+                                        <span class="hidden-sms">
+                                            {!! trans('LaravelLogger::laravel-logger.dashboard.subtitle') !!}
+                                        </span>
+                                    </span>
+                                @endif
                             @endif
 
                         </div>
@@ -130,6 +141,10 @@
             </div>
         </div>
     </div>
+
+@if(config('LaravelLogger.enableLiveSearch'))
+@include('LaravelLogger::scripts.live-search-script')
+@endif
 
 @include('LaravelLogger::modals.confirm-modal', ['formTrigger' => 'confirmDelete', 'modalClass' => 'danger', 'actionBtnIcon' => 'fa-trash-o'])
 

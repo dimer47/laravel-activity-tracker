@@ -9,7 +9,7 @@ if (isset($hoverable) && $hoverable === true) {
     $hoverable = false;
 }
 
-if (Request::is('activity/cleared')) {
+if (request()->is('activity/cleared')) {
     $prependUrl = '/activity/cleared/log/';
 }
 
@@ -55,7 +55,7 @@ if (Request::is('activity/cleared')) {
                     <i class="fa fa-laptop fa-fw" aria-hidden="true"></i>
                     {!! trans('LaravelLogger::laravel-logger.dashboard.labels.agent') !!}
                 </th>
-                @if(Request::is('activity/cleared'))
+                @if(request()->is('activity/cleared'))
                     <th>
                         <i class="fa fa-trash-o fa-fw" aria-hidden="true"></i>
                         {!! trans('LaravelLogger::laravel-logger.dashboard.labels.deleteDate') !!}
@@ -242,7 +242,7 @@ if (Request::is('activity/cleared')) {
                             </small>
                         </sup>
                     </td>
-                    @if(Request::is('activity/cleared'))
+                    @if(request()->is('activity/cleared'))
                         <td>
                             {{ $activity->deleted_at }}
                         </td>
@@ -253,10 +253,16 @@ if (Request::is('activity/cleared')) {
     </table>
 </div>
 
-@if(config('LaravelLogger.loggerPaginationEnabled'))
+@if(config('LaravelLogger.loggerCursorPaginationEnabled'))
     <div class="text-center">
         <div class="d-flex justify-content-center">
-            {!! $activities->render() !!}
+            {!! $activities->links() !!}
+        </div>
+    </div>
+@elseif(config('LaravelLogger.loggerPaginationEnabled'))
+    <div class="text-center">
+        <div class="d-flex justify-content-center">
+            {!! $activities->links('vendor.pagination.bootstrap-4') !!}
         </div>
         <p>
             {!! trans('LaravelLogger::laravel-logger.pagination.countText', ['firstItem' => $activities->firstItem(), 'lastItem' => $activities->lastItem(), 'total' => $activities->total(), 'perPage' => $activities->perPage()]) !!}

@@ -27,7 +27,7 @@ return [
     */
 
     'loggerMiddlewareEnabled'   => env('LARAVEL_LOGGER_MIDDLEWARE_ENABLED', true),
-    'loggerMiddlewareExcept'    => array_filter(explode(',', trim(env('LARAVEL_LOGGER_MIDDLEWARE_EXCEPT')))),
+    'loggerMiddlewareExcept'    => array_filter(explode(',', trim((string) env('LARAVEL_LOGGER_MIDDLEWARE_EXCEPT') ?? ''))),
 
     /*
     |--------------------------------------------------------------------------
@@ -90,6 +90,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'loggerPaginationEnabled' => env('LARAVEL_LOGGER_PAGINATION_ENABLED', true),
+    'loggerCursorPaginationEnabled' => env('LARAVEL_LOGGER_CURSOR_PAGINATION_ENABLED', false),
     'loggerPaginationPerPage' => env('LARAVEL_LOGGER_PAGINATION_PER_PAGE', 25),
 
     /*
@@ -171,5 +172,8 @@ return [
     // Font Awesome
     'enableFontAwesomeCDN'      => env('LARAVEL_LOGGER_FONT_AWESOME_CDN_ENABLED', true),
     'fontAwesomeCDN'            => env('LARAVEL_LOGGER_FONT_AWESOME_CDN_URL', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'),
+
+    // LiveSearch for scalability
+    'enableLiveSearch'          => env('LARAVEL_LOGGER_LIVE_SEARCH_ENABLED', true),
 
 ];

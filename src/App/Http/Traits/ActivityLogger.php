@@ -15,10 +15,11 @@ trait ActivityLogger
      *
      * @param null $description
      * @param null $details
+     * @param ?array $rel
      *
      * @return void
      */
-    public static function activity($description = null, $details = null)
+    public function activity($description = null, $details = null, array $rel = null)
     {
         $userType = trans('LaravelLogger::laravel-logger.userTypes.guest');
         $userId = null;
@@ -68,6 +69,13 @@ trait ActivityLogger
             $ip = Request::ip();
         }
 
+        $relId = null;
+        $relModel = null;
+        if (is_array($rel) && array_key_exists('id', $rel) && array_key_exists('model', $rel)) {
+            $relId = $rel['id'];
+            $relModel = $rel['model'];
+        }
+
         $data = [
             'description'   => $description,
             'details'       => $details,
@@ -79,10 +87,12 @@ trait ActivityLogger
             'locale'        => Request::header('accept-language'),
             'referer'       => Request::header('referer'),
             'methodType'    => Request::method(),
+            'relId'         => $relId,
+            'relModel'      => $relModel,
         ];
 
         // Validation Instance
-        $validator = Validator::make($data, config('laravel-logger.defaultActivityModel')::rules());
+        $validator = Validator::make($data, config('LaravelLogger.defaultActivityModel')::rules());
         if ($validator->fails()) {
             $errors = self::prepareErrorMessage($validator->errors(), $data);
             if (config('LaravelLogger.logDBActivityLogFailuresToFile')) {
@@ -102,7 +112,7 @@ trait ActivityLogger
      */
     private static function storeActivity($data)
     {
-        config('laravel-logger.defaultActivityModel')::create([
+        config('LaravelLogger.defaultActivityModel')::create([
             'description'   => $data['description'],
             'details'       => $data['details'],
             'userType'      => $data['userType'],
@@ -113,6 +123,8 @@ trait ActivityLogger
             'locale'        => $data['locale'],
             'referer'       => $data['referer'],
             'methodType'    => $data['methodType'],
+            'relId'         => $data['relId'],
+            'relModel'      => $data['relModel'],
         ]);
     }
 
