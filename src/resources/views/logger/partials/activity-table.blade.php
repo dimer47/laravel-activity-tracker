@@ -1,6 +1,6 @@
 @php
 
-$drilldownStatus = config('LaravelLogger.enableDrillDown');
+$drilldownStatus = config('LaravelActivityTracker.enableDrillDown');
 $prependUrl = '/activity/log/';
 
 if (isset($hoverable) && $hoverable === true) {
@@ -16,56 +16,56 @@ if (request()->is('activity/cleared')) {
 @endphp
 
 <div class="table-responsive activity-table">
-    <table class="table table-striped table-condensed table-sm @if(config('LaravelLogger.enableDrillDown') && $hoverable) table-hover @endif data-table">
+    <table class="table table-striped table-condensed table-sm @if(config('LaravelActivityTracker.enableDrillDown') && $hoverable) table-hover @endif data-table">
         <thead>
             <tr>
                 <th>
                     <i class="fa fa-database fa-fw" aria-hidden="true"></i>
                     <span class="hidden-sm hidden-xs">
-                        {!! trans('LaravelLogger::laravel-logger.dashboard.labels.id') !!}
+                        {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.labels.id') !!}
                     </span>
                 </th>
                 <th>
                     <i class="fa fa-clock-o fa-fw" aria-hidden="true"></i>
-                    {!! trans('LaravelLogger::laravel-logger.dashboard.labels.time') !!}
+                    {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.labels.time') !!}
                 </th>
                 <th>
                     <i class="fa fa-file-text-o fa-fw" aria-hidden="true"></i>
-                    {!! trans('LaravelLogger::laravel-logger.dashboard.labels.description') !!}
+                    {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.labels.description') !!}
                 </th>
                 <th>
                     <i class="fa fa-user-o fa-fw" aria-hidden="true"></i>
-                    {!! trans('LaravelLogger::laravel-logger.dashboard.labels.user') !!}
+                    {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.labels.user') !!}
                 </th>
                 <th>
                     <i class="fa fa-truck fa-fw" aria-hidden="true"></i>
                     <span class="hidden-sm hidden-xs">
-                        {!! trans('LaravelLogger::laravel-logger.dashboard.labels.method') !!}
+                        {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.labels.method') !!}
                     </span>
                 </th>
                 <th>
                     <i class="fa fa-map-o fa-fw" aria-hidden="true"></i>
-                    {!! trans('LaravelLogger::laravel-logger.dashboard.labels.route') !!}
+                    {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.labels.route') !!}
                 </th>
                 <th>
                     <i class="fa fa-map-marker fa-fw" aria-hidden="true"></i>
-                    {!! trans('LaravelLogger::laravel-logger.dashboard.labels.ipAddress') !!}
+                    {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.labels.ipAddress') !!}
                 </th>
                 <th>
                     <i class="fa fa-laptop fa-fw" aria-hidden="true"></i>
-                    {!! trans('LaravelLogger::laravel-logger.dashboard.labels.agent') !!}
+                    {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.labels.agent') !!}
                 </th>
                 @if(request()->is('activity/cleared'))
                     <th>
                         <i class="fa fa-trash-o fa-fw" aria-hidden="true"></i>
-                        {!! trans('LaravelLogger::laravel-logger.dashboard.labels.deleteDate') !!}
+                        {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.labels.deleteDate') !!}
                     </th>
                 @endif
             </tr>
         </thead>
         <tbody>
             @foreach($activities as $activity)
-                <tr @if($drilldownStatus && $hoverable) class="clickable-row" data-href="{{ url($prependUrl . $activity->id) }}" data-toggle="tooltip" title="{{trans('LaravelLogger::laravel-logger.tooltips.viewRecord')}}" @endif >
+                <tr @if($drilldownStatus && $hoverable) class="clickable-row" data-href="{{ url($prependUrl . $activity->id) }}" data-toggle="tooltip" title="{{trans('LaravelActivityTracker::laravel-activity-tracker.tooltips.viewRecord')}}" @endif >
                     <td>
                         <small>
                             @if($hoverable)
@@ -86,17 +86,17 @@ if (request()->is('activity/cleared')) {
                     <td>
                         @php
                             switch ($activity->userType) {
-                                case trans('LaravelLogger::laravel-logger.userTypes.registered'):
+                                case trans('LaravelActivityTracker::laravel-activity-tracker.userTypes.registered'):
                                     $userTypeClass = 'success';
                                     $userLabel = $activity->userDetails['name'];
                                     break;
 
-                                case trans('LaravelLogger::laravel-logger.userTypes.crawler'):
+                                case trans('LaravelActivityTracker::laravel-activity-tracker.userTypes.crawler'):
                                     $userTypeClass = 'danger';
                                     $userLabel = $activity->userType;
                                     break;
 
-                                case trans('LaravelLogger::laravel-logger.userTypes.guest'):
+                                case trans('LaravelActivityTracker::laravel-activity-tracker.userTypes.guest'):
                                 default:
                                     $userTypeClass = 'warning';
                                     $userLabel = $activity->userType;
@@ -253,19 +253,19 @@ if (request()->is('activity/cleared')) {
     </table>
 </div>
 
-@if(config('LaravelLogger.loggerCursorPaginationEnabled'))
+@if(config('LaravelActivityTracker.loggerCursorPaginationEnabled'))
     <div class="text-center">
         <div class="d-flex justify-content-center">
             {!! $activities->links() !!}
         </div>
     </div>
-@elseif(config('LaravelLogger.loggerPaginationEnabled'))
+@elseif(config('LaravelActivityTracker.loggerPaginationEnabled'))
     <div class="text-center">
         <div class="d-flex justify-content-center">
             {!! $activities->links('vendor.pagination.bootstrap-4') !!}
         </div>
         <p>
-            {!! trans('LaravelLogger::laravel-logger.pagination.countText', ['firstItem' => $activities->firstItem(), 'lastItem' => $activities->lastItem(), 'total' => $activities->total(), 'perPage' => $activities->perPage()]) !!}
+            {!! trans('LaravelActivityTracker::laravel-activity-tracker.pagination.countText', ['firstItem' => $activities->firstItem(), 'lastItem' => $activities->lastItem(), 'total' => $activities->total(), 'perPage' => $activities->perPage()]) !!}
         </p>
     </div>
 @endif

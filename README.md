@@ -1,14 +1,17 @@
-![Laravel Logger](https://github-project-images.s3-us-west-2.amazonaws.com/laravel-blocker/laravel-logger-logo.png)
+![Laravel Activity Tracker](https://github-project-images.s3-us-west-2.amazonaws.com/laravel-blocker/laravel-activity-tracker-logo.png)
 
-# Laravel Activity Logger
-Laravel logger is an activity event logger for your Laravel or Lumen application. It comes out the box with ready to use with dashboard to view your activity. Laravel logger can be added as a middleware or called through a trait. Easily have an Activity Log. This package is easily configurable and customizable. Supports Laravel 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 6, 7, 8 and 9+
+# Laravel Activity Tracker
 
-[![Latest Stable Version](https://poser.pugx.org/jeremykenedy/laravel-logger/v/stable)](https://packagist.org/packages/jeremykenedy/laravel-logger)
-[![Total Downloads](https://poser.pugx.org/jeremykenedy/laravel-logger/downloads)](https://packagist.org/packages/jeremykenedy/laravel-logger)
+> **Fork Notice**: This package is a fork of the excellent [laravel-logger](https://github.com/jeremykenedy/laravel-logger) by [Jeremy Kenedy](https://github.com/jeremykenedy). This fork adds enhancements and maintains compatibility with newer Laravel versions. All credit for the original work goes to Jeremy Kenedy.
+
+Laravel Activity Tracker is an activity event logger for your Laravel or Lumen application. It comes out the box with ready to use with dashboard to view your activity. It can be added as a middleware or called through a trait. Easily have an Activity Log. This package is easily configurable and customizable. Supports Laravel 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 6, 7, 8, 9, 10 and 11+
+
+[![Latest Stable Version](https://poser.pugx.org/dimer47/laravel-activity-tracker/v/stable)](https://packagist.org/packages/dimer47/laravel-activity-tracker)
+[![Total Downloads](https://poser.pugx.org/dimer47/laravel-activity-tracker/downloads)](https://packagist.org/packages/dimer47/laravel-activity-tracker)
 <a href="https://styleci.io/repos/109630720">
     <img src="https://styleci.io/repos/109630720/shield?branch=master" alt="StyleCI" style="border-radius: 3px;">
 </a>
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jeremykenedy/laravel-logger/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jeremykenedy/laravel-logger/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dimer47/laravel-activity-tracker/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/dimer47/laravel-activity-tracker/?branch=master)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 #### Table of contents
@@ -81,7 +84,7 @@ Laravel logger can work out the box with or without the following roles packages
 1. From your projects root folder in terminal run:
 
 ```bash
-    composer require jeremykenedy/laravel-logger
+    composer require dimer47/laravel-activity-tracker
 ```
 
 2. Register the package
@@ -94,7 +97,7 @@ Register the package with laravel in `config/app.php` under `providers` with the
 
 ```php
     'providers' => [
-        jeremykenedy\LaravelLogger\LaravelLoggerServiceProvider::class,
+        Dimer47\LaravelActivityTracker\LaravelActivityTrackerServiceProvider::class,
     ];
 ```
 
@@ -111,16 +114,16 @@ Register the package with laravel in `config/app.php` under `providers` with the
 5. Optionally publish the packages views, config file, assets, and language files by running the following from your projects root folder:
 
 ```bash
-    php artisan vendor:publish --tag=LaravelLogger
+    php artisan vendor:publish --tag=LaravelActivityTracker
 ```
 
 ### Lumen Installation Instructions
-##### This installs laravel-logger without the GUI
+##### This installs laravel-activity-tracker without the GUI
 
 1. From your projects root folder in terminal run:
 
 ```bash
-    composer require jeremykenedy/laravel-logger
+    composer require dimer47/laravel-activity-tracker
 ```
 
 2. Register the package
@@ -129,14 +132,14 @@ Register the package with laravel in `bootstrap/app.php` with the following:
 
 ```php
     $app->register(\Jaybizzle\LaravelCrawlerDetect\LaravelCrawlerDetectServiceProvider::class);
-    $app->configure('laravel-logger');
-    $app->register(\jeremykenedy\LaravelLogger\LaravelLoggerServiceProvider::class);
-    $app->routeMiddleware(['activity' => \jeremykenedy\LaravelLogger\App\Http\Middleware\LogActivity::class, ]);
+    $app->configure('laravel-activity-tracker');
+    $app->register(\Dimer47\LaravelActivityTracker\LaravelActivityTrackerServiceProvider::class);
+    $app->routeMiddleware(['activity' => \Dimer47\LaravelActivityTracker\App\Http\Middleware\LogActivity::class, ]);
 ```
 
-3. Copy the configuration file [laravel-logger.php](src/config/laravel-logger.php) to your `config/` directory
+3. Copy the configuration file [laravel-activity-tracker.php](src/config/laravel-activity-tracker.php) to your `config/` directory
 
-##### Set LARAVEL_LOGGER_DISABLE_ROUTES=true in your .env file!
+##### Set LARAVEL_ACTIVITY_TRACKER_DISABLE_ROUTES=true in your .env file!
 
 
 4. Run the migration to add the table to record the activities to:
@@ -153,7 +156,7 @@ Register the package with laravel in `bootstrap/app.php` with the following:
 
 
 ### Configuration
-Laravel Activity Logger can be configured in directly in `/config/laravel-logger.php` if you published the assets.
+Laravel Activity Logger can be configured in directly in `/config/laravel-activity-tracker.php` if you published the assets.
 Or you can variables to your `.env` file.
 
 
@@ -161,41 +164,41 @@ Or you can variables to your `.env` file.
 Here are the `.env` file variables available:
 
 ```dotenv
-LARAVEL_LOGGER_DATABASE_CONNECTION=mysql
-LARAVEL_LOGGER_DATABASE_TABLE=laravel_logger_activity
-LARAVEL_LOGGER_ROLES_ENABLED=true
-LARAVEL_LOGGER_ROLES_MIDDLWARE=role:admin
-LARAVEL_LOGGER_MIDDLEWARE_ENABLED=true
-LARAVEL_LOGGER_MIDDLEWARE_EXCEPT=
-LARAVEL_LOGGER_ACTIVITY_MODEL=jeremykenedy\LaravelLogger\App\Models\Activity
-LARAVEL_LOGGER_USER_MODEL=App\User
-LARAVEL_LOGGER_USER_ID_FIELD=id
-LARAVEL_LOGGER_DISABLE_ROUTES=false
-LARAVEL_LOGGER_PAGINATION_ENABLED=true
-LARAVEL_LOGGER_CURSOR_PAGINATION_ENABLED=false
-LARAVEL_LOGGER_PAGINATION_PER_PAGE=25
-LARAVEL_LOGGER_DATATABLES_ENABLED=true
-LARAVEL_LOGGER_ENABLE_SEARCH=true
-LARAVEL_LOGGER_SEARCH_FIELDS=description,user,method,route,ip
-LARAVEL_LOGGER_DASHBOARD_MENU_ENABLED=true
-LARAVEL_LOGGER_DASHBOARD_DRILLABLE=true
-LARAVEL_LOGGER_LOG_RECORD_FAILURES_TO_FILE=true
-LARAVEL_LOGGER_FLASH_MESSAGE_BLADE_ENABLED=true
-LARAVEL_LOGGER_LAYOUT=layouts.app
-LARAVEL_LOGGER_BOOTSTRAP_VERSION=4
-LARAVEL_LOGGER_BLADE_PLACEMENT=stack                    #option: yield or stack
-LARAVEL_LOGGER_BLADE_PLACEMENT_CSS=css-header           #placement name
-LARAVEL_LOGGER_BLADE_PLACEMENT_JS=scripts-footer        #placement name
-LARAVEL_LOGGER_JQUERY_CDN_ENABLED=true
-LARAVEL_LOGGER_JQUERY_CDN_URL=https://code.jquery.com/jquery-2.2.4.min.js
-LARAVEL_LOGGER_BOOTSTRAP_CSS_CDN_ENABLED=true
-LARAVEL_LOGGER_BOOTSTRAP_CSS_CDN_URL=https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css
-LARAVEL_LOGGER_BOOTSTRAP_JS_CDN_ENABLED=true
-LARAVEL_LOGGER_BOOTSTRAP_JS_CDN_URL=https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js
-LARAVEL_LOGGER_POPPER_JS_CDN_ENABLED=true
-LARAVEL_LOGGER_POPPER_JS_CDN_URL=https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js
-LARAVEL_LOGGER_FONT_AWESOME_CDN_ENABLED=true
-LARAVEL_LOGGER_FONT_AWESOME_CDN_URL=https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
+LARAVEL_ACTIVITY_TRACKER_DATABASE_CONNECTION=mysql
+LARAVEL_ACTIVITY_TRACKER_DATABASE_TABLE=laravel_logger_activity
+LARAVEL_ACTIVITY_TRACKER_ROLES_ENABLED=true
+LARAVEL_ACTIVITY_TRACKER_ROLES_MIDDLWARE=role:admin
+LARAVEL_ACTIVITY_TRACKER_MIDDLEWARE_ENABLED=true
+LARAVEL_ACTIVITY_TRACKER_MIDDLEWARE_EXCEPT=
+LARAVEL_ACTIVITY_TRACKER_ACTIVITY_MODEL=Dimer47\LaravelActivityTracker\App\Models\Activity
+LARAVEL_ACTIVITY_TRACKER_USER_MODEL=App\User
+LARAVEL_ACTIVITY_TRACKER_USER_ID_FIELD=id
+LARAVEL_ACTIVITY_TRACKER_DISABLE_ROUTES=false
+LARAVEL_ACTIVITY_TRACKER_PAGINATION_ENABLED=true
+LARAVEL_ACTIVITY_TRACKER_CURSOR_PAGINATION_ENABLED=false
+LARAVEL_ACTIVITY_TRACKER_PAGINATION_PER_PAGE=25
+LARAVEL_ACTIVITY_TRACKER_DATATABLES_ENABLED=true
+LARAVEL_ACTIVITY_TRACKER_ENABLE_SEARCH=true
+LARAVEL_ACTIVITY_TRACKER_SEARCH_FIELDS=description,user,method,route,ip
+LARAVEL_ACTIVITY_TRACKER_DASHBOARD_MENU_ENABLED=true
+LARAVEL_ACTIVITY_TRACKER_DASHBOARD_DRILLABLE=true
+LARAVEL_ACTIVITY_TRACKER_LOG_RECORD_FAILURES_TO_FILE=true
+LARAVEL_ACTIVITY_TRACKER_FLASH_MESSAGE_BLADE_ENABLED=true
+LARAVEL_ACTIVITY_TRACKER_LAYOUT=layouts.app
+LARAVEL_ACTIVITY_TRACKER_BOOTSTRAP_VERSION=4
+LARAVEL_ACTIVITY_TRACKER_BLADE_PLACEMENT=stack                    #option: yield or stack
+LARAVEL_ACTIVITY_TRACKER_BLADE_PLACEMENT_CSS=css-header           #placement name
+LARAVEL_ACTIVITY_TRACKER_BLADE_PLACEMENT_JS=scripts-footer        #placement name
+LARAVEL_ACTIVITY_TRACKER_JQUERY_CDN_ENABLED=true
+LARAVEL_ACTIVITY_TRACKER_JQUERY_CDN_URL=https://code.jquery.com/jquery-2.2.4.min.js
+LARAVEL_ACTIVITY_TRACKER_BOOTSTRAP_CSS_CDN_ENABLED=true
+LARAVEL_ACTIVITY_TRACKER_BOOTSTRAP_CSS_CDN_URL=https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css
+LARAVEL_ACTIVITY_TRACKER_BOOTSTRAP_JS_CDN_ENABLED=true
+LARAVEL_ACTIVITY_TRACKER_BOOTSTRAP_JS_CDN_URL=https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js
+LARAVEL_ACTIVITY_TRACKER_POPPER_JS_CDN_ENABLED=true
+LARAVEL_ACTIVITY_TRACKER_POPPER_JS_CDN_URL=https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js
+LARAVEL_ACTIVITY_TRACKER_FONT_AWESOME_CDN_ENABLED=true
+LARAVEL_ACTIVITY_TRACKER_FONT_AWESOME_CDN_URL=https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
 ```
 
 ### Usage
@@ -226,7 +229,7 @@ To use the trait:
 1. Include the call in the head of your class file:
 
     ```php
-        use jeremykenedy\LaravelLogger\App\Http\Traits\ActivityLogger;
+        use Dimer47\LaravelActivityTracker\App\Http\Traits\ActivityLogger;
     ```
 
 2. Include the trait call in the opening of your class:
@@ -261,31 +264,31 @@ To use the trait:
 #### Custom package routes
 If you wish to change the route paths, names or other options you can disable the default routes in your `.env` file by setting
 ```dotenv
-LARAVEL_LOGGER_DISABLE_ROUTES=true
+LARAVEL_ACTIVITY_TRACKER_DISABLE_ROUTES=true
 ```
 
-If you are on an existing install, you will also need update your `laravel-logger.php` config file to add the config option:
+If you are on an existing install, you will also need update your `laravel-activity-tracker.php` config file to add the config option:
 ```php
-'disableRoutes' => env('LARAVEL_LOGGER_DISABLE_ROUTES', false),
+'disableRoutes' => env('LARAVEL_ACTIVITY_TRACKER_DISABLE_ROUTES', false),
 ```
 
 You can then add the routes directly to your application's `routes/web.php` file, and customise as required.
 
 ```php
-Route::group(['prefix' => 'activity', 'namespace' => 'jeremykenedy\LaravelLogger\App\Http\Controllers', 'middleware' => ['web', 'auth', 'activity']], function () {
+Route::group(['prefix' => 'activity', 'namespace' => 'Dimer47\LaravelActivityTracker\App\Http\Controllers', 'middleware' => ['web', 'auth', 'activity']], function () {
 
     // Dashboards
-    Route::get('/', 'LaravelLoggerController@showAccessLog')->name('activity');
-    Route::get('/cleared', ['uses' => 'LaravelLoggerController@showClearedActivityLog'])->name('cleared');
+    Route::get('/', 'ActivityTrackerController@showAccessLog')->name('activity');
+    Route::get('/cleared', ['uses' => 'ActivityTrackerController@showClearedActivityLog'])->name('cleared');
 
     // Drill Downs
-    Route::get('/log/{id}', 'LaravelLoggerController@showAccessLogEntry');
-    Route::get('/cleared/log/{id}', 'LaravelLoggerController@showClearedAccessLogEntry');
+    Route::get('/log/{id}', 'ActivityTrackerController@showAccessLogEntry');
+    Route::get('/cleared/log/{id}', 'ActivityTrackerController@showClearedAccessLogEntry');
 
     // Forms
-    Route::delete('/clear-activity', ['uses' => 'LaravelLoggerController@clearActivityLog'])->name('clear-activity');
-    Route::delete('/destroy-activity', ['uses' => 'LaravelLoggerController@destroyActivityLog'])->name('destroy-activity');
-    Route::post('/restore-log', ['uses' => 'LaravelLoggerController@restoreClearedActivityLog'])->name('restore-activity');
+    Route::delete('/clear-activity', ['uses' => 'ActivityTrackerController@clearActivityLog'])->name('clear-activity');
+    Route::delete('/destroy-activity', ['uses' => 'ActivityTrackerController@destroyActivityLog'])->name('destroy-activity');
+    Route::post('/restore-log', ['uses' => 'ActivityTrackerController@restoreClearedActivityLog'])->name('restore-activity');
 });
 ```
 
@@ -295,31 +298,31 @@ adding dynamic search fields (description , user, URL , method and ip address)
 
 ### High Performance Paginator
 
-When dealing with millions activity records, default behavior of not paginate records or [Laravel's paginator](https://laravel.com/docs/pagination#paginating-eloquent-results) (enabled `LARAVEL_LOGGER_PAGINATION_ENABLED=true`) may lead to huge performance penalties. For that use case you may set `LARAVEL_LOGGER_CURSOR_PAGINATION_ENABLED=true` to enable [Laravel's Cursor Pagination](https://laravel.com/docs/pagination#cursor-pagination) feature. This will heavily improve Laravel Logger page loading time. If you choose to do so it's advisable to read [Cursor vs. Offset Pagination](https://laravel.com/docs/pagination#cursor-vs-offset-pagination) section on Laravel's documentation to get acquainted with Cursor Pagination limitations.
+When dealing with millions activity records, default behavior of not paginate records or [Laravel's paginator](https://laravel.com/docs/pagination#paginating-eloquent-results) (enabled `LARAVEL_ACTIVITY_TRACKER_PAGINATION_ENABLED=true`) may lead to huge performance penalties. For that use case you may set `LARAVEL_ACTIVITY_TRACKER_CURSOR_PAGINATION_ENABLED=true` to enable [Laravel's Cursor Pagination](https://laravel.com/docs/pagination#cursor-pagination) feature. This will heavily improve Laravel Activity Tracker page loading time. If you choose to do so it's advisable to read [Cursor vs. Offset Pagination](https://laravel.com/docs/pagination#cursor-vs-offset-pagination) section on Laravel's documentation to get acquainted with Cursor Pagination limitations.
 
 ##### .env file
 add these configurations to your .env file to control the logging search
 ```
-LARAVEL_LOGGER_ENABLE_SEARCH=true
+LARAVEL_ACTIVITY_TRACKER_ENABLE_SEARCH=true
 // you can customize your search using these options [description,user,method,route,ip]
-LARAVEL_LOGGER_SEARCH_FIELDS=description,user,method,route,ip
+LARAVEL_ACTIVITY_TRACKER_SEARCH_FIELDS=description,user,method,route,ip
 ```
 by default all search fields are enabled when you enable the search with this one line configuration 
 ```
-LARAVEL_LOGGER_SEARCH_ENABLE=true
+LARAVEL_ACTIVITY_TRACKER_SEARCH_ENABLE=true
 ```
 
 ### Screenshots
-![dashboard](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-logger/1-dashboard.jpg)
-![drilldown](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-logger/2-drilldown.jpg)
-![confirm-clear](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-logger/3-confirm-clear.jpg)
-![log-cleared-msg](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-logger/4-log-cleared-msg.jpg)
-![cleared-log](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-logger/5-cleared-log.jpg)
-![confirm-restore](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-logger/5-confirm-restore.jpg)
-![confirm-destroy](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-logger/6-confirm-destroy.jpg)
-![success-destroy](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-logger/7-success-destroy.jpg)
-![success-restored](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-logger/8-success-restored.jpg)
-![cleared-drilldown](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-logger/9-cleared-drilldown.jpg)
+![dashboard](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-activity-tracker/1-dashboard.jpg)
+![drilldown](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-activity-tracker/2-drilldown.jpg)
+![confirm-clear](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-activity-tracker/3-confirm-clear.jpg)
+![log-cleared-msg](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-activity-tracker/4-log-cleared-msg.jpg)
+![cleared-log](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-activity-tracker/5-cleared-log.jpg)
+![confirm-restore](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-activity-tracker/5-confirm-restore.jpg)
+![confirm-destroy](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-activity-tracker/6-confirm-destroy.jpg)
+![success-destroy](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-activity-tracker/7-success-destroy.jpg)
+![success-restored](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-activity-tracker/8-success-restored.jpg)
+![cleared-drilldown](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-activity-tracker/9-cleared-drilldown.jpg)
 
 ### File Tree
 
@@ -333,11 +336,11 @@ LARAVEL_LOGGER_SEARCH_ENABLE=true
 ├── composer.json
 └── src
     ├── .env.example
-    ├── LaravelLoggerServiceProvider.php
+    ├── LaravelActivityTrackerServiceProvider.php
     ├── app
     │   ├── Http
     │   │   ├── Controllers
-    │   │   │   └── LaravelLoggerController.php
+    │   │   │   └── ActivityTrackerController.php
     │   │   ├── Middleware
     │   │   │   └── LogActivity.php
     │   │   └── Traits
@@ -357,16 +360,16 @@ LARAVEL_LOGGER_SEARCH_ENABLE=true
     │   └── Models
     │       └── Activity.php
     ├── config
-    │   └── laravel-logger.php
+    │   └── laravel-activity-tracker.php
     ├── database
     │   └── migrations
-    │       └── 2017_11_04_103444_create_laravel_logger_activity_table.php
+    │       └── 2017_11_04_103444_create_activity_tracker_table.php
     ├── resources
     │   ├── lang
     │   │   ├── de
-    │   │   │   └── laravel-logger.php
+    │   │   │   └── laravel-activity-tracker.php
     │   │   └── en
-    │   │       └── laravel-logger.php
+    │   │       └── laravel-activity-tracker.php
     │   └── views
     │       ├── forms
     │       │   ├── clear-activity-log.blade.php

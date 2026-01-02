@@ -1,6 +1,6 @@
 <?php
 
-namespace jeremykenedy\LaravelLogger\App\Models;
+namespace Dimer47\LaravelActivityTracker\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -55,6 +55,8 @@ class Activity extends Model
         'locale',
         'referer',
         'methodType',
+        'relId',
+        'relModel',
     ];
 
     /**
@@ -75,6 +77,8 @@ class Activity extends Model
         'locale'        => 'string',
         'referer'       => 'string',
         'methodType'    => 'string',
+        'relId'         => 'integer',
+        'relModel'      => 'string',
     ];
 
     /**
@@ -85,8 +89,8 @@ class Activity extends Model
     public function __construct($attributes = [])
     {
         parent::__construct($attributes);
-        $this->table = config('LaravelLogger.loggerDatabaseTable');
-        $this->connection = config('LaravelLogger.loggerDatabaseConnection');
+        $this->table = config('LaravelActivityTracker.loggerDatabaseTable');
+        $this->connection = config('LaravelActivityTracker.loggerDatabaseConnection');
     }
 
     /**
@@ -112,7 +116,7 @@ class Activity extends Model
      */
     public function user()
     {
-        return $this->hasOne(config('LaravelLogger.defaultUserModel'));
+        return $this->hasOne(config('LaravelActivityTracker.defaultUserModel'));
     }
 
     /**
@@ -122,7 +126,7 @@ class Activity extends Model
      *
      * @return array
      */
-    public static function rules($merge = [])
+    public static function rules($merge = []): array
     {
         return array_merge(
             [
@@ -130,15 +134,31 @@ class Activity extends Model
                 'details'       => 'nullable|string',
                 'userType'      => 'required|string',
                 'userId'        => 'nullable|integer',
-                'route'         => 'nullable|string',
+                'route'         => 'nullable|url',
                 'ipAddress'     => 'nullable|ip',
                 'userAgent'     => 'nullable|string',
                 'locale'        => 'nullable|string',
                 'referer'       => 'nullable|string',
                 'methodType'    => 'nullable|string',
+                'relId'         => 'nullable|integer',
+                'relModel'      => 'nullable|string',
             ],
             $merge
         );
+    }
+
+    /**
+     * Get the related model instance.
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function getRelatedModelAttribute()
+    {
+        if ($this->relModel && $this->relId && class_exists($this->relModel)) {
+            return $this->relModel::find($this->relId);
+        }
+
+        return null;
     }
 
     /**
@@ -148,6 +168,6 @@ class Activity extends Model
      */
     public function getUserAgentDetailsAttribute()
     {
-        return \jeremykenedy\LaravelLogger\App\Http\Traits\UserAgentDetails::details($this->userAgent);
+        return \Dimer47\LaravelActivityTracker\App\Http\Traits\UserAgentDetails::details($this->userAgent);
     }
 }

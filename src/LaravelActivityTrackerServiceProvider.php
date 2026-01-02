@@ -1,15 +1,15 @@
 <?php
 
-namespace jeremykenedy\LaravelLogger;
+namespace Dimer47\LaravelActivityTracker;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use jeremykenedy\LaravelLogger\App\Http\Middleware\LogActivity;
+use Dimer47\LaravelActivityTracker\App\Http\Middleware\LogActivity;
 
-class LaravelLoggerServiceProvider extends ServiceProvider
+class LaravelActivityTrackerServiceProvider extends ServiceProvider
 {
-    const DISABLE_DEFAULT_ROUTES_CONFIG = 'laravel-logger.disableRoutes';
+    const DISABLE_DEFAULT_ROUTES_CONFIG = 'laravel-activity-tracker.disableRoutes';
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -26,31 +26,31 @@ class LaravelLoggerServiceProvider extends ServiceProvider
     protected $listeners = [
 
         'Illuminate\Auth\Events\Attempting' => [
-            'jeremykenedy\LaravelLogger\App\Listeners\LogAuthenticationAttempt',
+            'Dimer47\LaravelActivityTracker\App\Listeners\LogAuthenticationAttempt',
         ],
 
         'Illuminate\Auth\Events\Authenticated' => [
-            'jeremykenedy\LaravelLogger\App\Listeners\LogAuthenticated',
+            'Dimer47\LaravelActivityTracker\App\Listeners\LogAuthenticated',
         ],
 
         'Illuminate\Auth\Events\Login' => [
-            'jeremykenedy\LaravelLogger\App\Listeners\LogSuccessfulLogin',
+            'Dimer47\LaravelActivityTracker\App\Listeners\LogSuccessfulLogin',
         ],
 
         'Illuminate\Auth\Events\Failed' => [
-            'jeremykenedy\LaravelLogger\App\Listeners\LogFailedLogin',
+            'Dimer47\LaravelActivityTracker\App\Listeners\LogFailedLogin',
         ],
 
         'Illuminate\Auth\Events\Logout' => [
-            'jeremykenedy\LaravelLogger\App\Listeners\LogSuccessfulLogout',
+            'Dimer47\LaravelActivityTracker\App\Listeners\LogSuccessfulLogout',
         ],
 
         'Illuminate\Auth\Events\Lockout' => [
-            'jeremykenedy\LaravelLogger\App\Listeners\LogLockout',
+            'Dimer47\LaravelActivityTracker\App\Listeners\LogLockout',
         ],
 
         'Illuminate\Auth\Events\PasswordReset' => [
-            'jeremykenedy\LaravelLogger\App\Listeners\LogPasswordReset',
+            'Dimer47\LaravelActivityTracker\App\Listeners\LogPasswordReset',
         ],
 
     ];
@@ -63,7 +63,7 @@ class LaravelLoggerServiceProvider extends ServiceProvider
     public function boot(Router $router)
     {
         $router->middlewareGroup('activity', [LogActivity::class]);
-        $this->loadTranslationsFrom(__DIR__.'/resources/lang/', 'LaravelLogger');
+        $this->loadTranslationsFrom(__DIR__.'/resources/lang/', 'LaravelActivityTracker');
     }
 
     /**
@@ -73,17 +73,17 @@ class LaravelLoggerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if (file_exists(config_path('laravel-logger.php'))) {
-            $this->mergeConfigFrom(config_path('laravel-logger.php'), 'LaravelLogger');
+        if (file_exists(config_path('laravel-activity-tracker.php'))) {
+            $this->mergeConfigFrom(config_path('laravel-activity-tracker.php'), 'LaravelActivityTracker');
         } else {
-            $this->mergeConfigFrom(__DIR__.'/config/laravel-logger.php', 'LaravelLogger');
+            $this->mergeConfigFrom(__DIR__.'/config/laravel-activity-tracker.php', 'LaravelActivityTracker');
         }
 
         if (config(self::DISABLE_DEFAULT_ROUTES_CONFIG) == false) {
             $this->loadRoutesFrom(__DIR__.'/routes/web.php');
         }
 
-        $this->loadViewsFrom(__DIR__.'/resources/views/', 'LaravelLogger');
+        $this->loadViewsFrom(__DIR__.'/resources/views/', 'LaravelActivityTracker');
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
 
         $this->registerEventListeners();
@@ -119,16 +119,16 @@ class LaravelLoggerServiceProvider extends ServiceProvider
     }
 
     /**
-     * Publish files for Laravel Logger.
+     * Publish files for Laravel Activity Tracker.
      *
      * @return void
      */
     private function publishFiles()
     {
-        $publishTag = 'LaravelLogger';
+        $publishTag = 'LaravelActivityTracker';
 
         $this->publishes([
-            __DIR__.'/config/laravel-logger.php' => base_path('config/laravel-logger.php'),
+            __DIR__.'/config/laravel-activity-tracker.php' => base_path('config/laravel-activity-tracker.php'),
         ], $publishTag);
 
         $this->publishes([

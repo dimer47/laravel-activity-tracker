@@ -1,9 +1,9 @@
 <?php
 
-namespace jeremykenedy\LaravelLogger\App\Listeners;
+namespace Dimer47\LaravelActivityTracker\App\Listeners;
 
 use Illuminate\Auth\Events\Login;
-use jeremykenedy\LaravelLogger\App\Http\Traits\ActivityLogger;
+use Dimer47\LaravelActivityTracker\App\Http\Traits\ActivityLogger;
 
 class LogSuccessfulLogin
 {
@@ -28,8 +28,8 @@ class LogSuccessfulLogin
      */
     public function handle(Login $event)
     {
-        if (config('LaravelLogger.logSuccessfulLogin')) {
-            $this->activity(trans('LaravelLogger::laravel-logger.listenerTypes.login'));
+        if (config('LaravelActivityTracker.logSuccessfulLogin')) {
+            $this->activity(trans('LaravelActivityTracker::laravel-activity-tracker.listenerTypes.login'));
         }
     }
 }

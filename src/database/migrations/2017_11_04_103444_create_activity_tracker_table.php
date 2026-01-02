@@ -3,9 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use jeremykenedy\LaravelLogger\App\Models\Activity;
+use Dimer47\LaravelActivityTracker\App\Models\Activity;
 
-class CreateLaravelLoggerActivityTable extends Migration
+class CreateActivityTrackerTable extends Migration
 {
     /**
      * Run the migrations.

@@ -1,43 +1,43 @@
 @php
-    $userIdField = config('LaravelLogger.defaultUserIDField')
+    $userIdField = config('LaravelActivityTracker.defaultUserIDField')
 @endphp
 
-@extends(config('LaravelLogger.loggerBladeExtended'))
+@extends(config('LaravelActivityTracker.loggerBladeExtended'))
 
-@if(config('LaravelLogger.bladePlacement') == 'yield')
-    @section(config('LaravelLogger.bladePlacementCss'))
-@elseif (config('LaravelLogger.bladePlacement') == 'stack')
-    @push(config('LaravelLogger.bladePlacementCss'))
+@if(config('LaravelActivityTracker.bladePlacement') == 'yield')
+    @section(config('LaravelActivityTracker.bladePlacementCss'))
+@elseif (config('LaravelActivityTracker.bladePlacement') == 'stack')
+    @push(config('LaravelActivityTracker.bladePlacementCss'))
 @endif
 
-@include('LaravelLogger::partials.styles')
+@include('LaravelActivityTracker::partials.styles')
 
-@if(config('LaravelLogger.bladePlacement') == 'yield')
+@if(config('LaravelActivityTracker.bladePlacement') == 'yield')
     @endsection
-@elseif (config('LaravelLogger.bladePlacement') == 'stack')
+@elseif (config('LaravelActivityTracker.bladePlacement') == 'stack')
     @endpush
 @endif
 
-@if(config('LaravelLogger.bladePlacement') == 'yield')
-    @section(config('LaravelLogger.bladePlacementJs'))
-@elseif (config('LaravelLogger.bladePlacement') == 'stack')
-    @push(config('LaravelLogger.bladePlacementJs'))
+@if(config('LaravelActivityTracker.bladePlacement') == 'yield')
+    @section(config('LaravelActivityTracker.bladePlacementJs'))
+@elseif (config('LaravelActivityTracker.bladePlacement') == 'stack')
+    @push(config('LaravelActivityTracker.bladePlacementJs'))
 @endif
 
-@include('LaravelLogger::partials.scripts', ['activities' => $userActivities])
+@include('LaravelActivityTracker::partials.scripts', ['activities' => $userActivities])
 
-@if(config('LaravelLogger.bladePlacement') == 'yield')
+@if(config('LaravelActivityTracker.bladePlacement') == 'yield')
     @endsection
-@elseif (config('LaravelLogger.bladePlacement') == 'stack')
+@elseif (config('LaravelActivityTracker.bladePlacement') == 'stack')
     @endpush
 @endif
 
 @section('template_title')
-    {{ trans('LaravelLogger::laravel-logger.drilldown.title', ['id' => $activity->id]) }}
+    {{ trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.title', ['id' => $activity->id]) }}
 @endsection
 
 @php
-    switch (config('LaravelLogger.bootstapVersion')) {
+    switch (config('LaravelActivityTracker.bootstapVersion')) {
         case '4':
             $containerClass = 'card';
             $containerHeaderClass = 'card-header';
@@ -49,18 +49,18 @@
             $containerHeaderClass = 'panel-heading';
             $containerBodyClass = 'panel-body';
     }
-    $bootstrapCardClasses = (is_null(config('LaravelLogger.bootstrapCardClasses')) ? '' : config('LaravelLogger.bootstrapCardClasses'));
+    $bootstrapCardClasses = (is_null(config('LaravelActivityTracker.bootstrapCardClasses')) ? '' : config('LaravelActivityTracker.bootstrapCardClasses'));
 
     switch ($activity->userType) {
-        case trans('LaravelLogger::laravel-logger.userTypes.registered'):
+        case trans('LaravelActivityTracker::laravel-activity-tracker.userTypes.registered'):
             $userTypeClass = 'success';
             break;
 
-        case trans('LaravelLogger::laravel-logger.userTypes.crawler'):
+        case trans('LaravelActivityTracker::laravel-activity-tracker.userTypes.crawler'):
             $userTypeClass = 'danger';
             break;
 
-        case trans('LaravelLogger::laravel-logger.userTypes.guest'):
+        case trans('LaravelActivityTracker::laravel-activity-tracker.userTypes.guest'):
         default:
             $userTypeClass = 'warning';
             break;
@@ -163,17 +163,17 @@
 @section('content')
 <div class="container-fluid">
 
-    @if(config('LaravelLogger.enablePackageFlashMessageBlade'))
-        @include('LaravelLogger::partials.form-status')
+    @if(config('LaravelActivityTracker.enablePackageFlashMessageBlade'))
+        @include('LaravelActivityTracker::partials.form-status')
     @endif
 
     <div class="panel @if($isClearedEntry) panel-danger @else panel-default @endif">
         <div class="{{ $containerClass }} @if($isClearedEntry) panel-danger @else panel-default @endif">
         <div class="{{ $containerHeaderClass }} @if($isClearedEntry) bg-danger text-white @else @endif" >
-            {!! trans('LaravelLogger::laravel-logger.drilldown.title', ['id' => $activity->id]) !!}
+            {!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.title', ['id' => $activity->id]) !!}
             <a href="@if($isClearedEntry) {{route('cleared')}} @else {{route('activity')}} @endif" class="btn @if($isClearedEntry) btn-default @else btn-info @endif btn-sm pull-right">
                 <i class="fa fa-fw fa-mail-reply" aria-hidden="true"></i>
-                {!! trans('LaravelLogger::laravel-logger.drilldown.buttons.back') !!}
+                {!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.buttons.back') !!}
             </a>
         </div>
         <div class="{{ $containerBodyClass }}">
@@ -183,23 +183,23 @@
                         <div class="col-md-6 col-lg-4">
                             <ul class="list-group">
                                 <li class="list-group-item @if($isClearedEntry) list-group-item-danger @else active @endif">
-                                    {!! trans('LaravelLogger::laravel-logger.drilldown.title-details') !!}
+                                    {!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.title-details') !!}
                                 </li>
                                 <li class="list-group-item">
                                     <dl class="dl-horizontal">
-                                        <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.id') !!}</dt>
+                                        <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.id') !!}</dt>
                                         <dd>{{$activity->id}}</dd>
-                                        <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.description') !!}</dt>
+                                        <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.description') !!}</dt>
                                         <dd>{{$activity->description}}</dd>
-                                        <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.details') !!}</dt>
-                                        <dd>@if($activity->details){{$activity->details}}@else{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.fields.none') !!}@endif</dd>
-                                        <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.route') !!}</dt>
+                                        <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.details') !!}</dt>
+                                        <dd>@if($activity->details){{$activity->details}}@else{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.fields.none') !!}@endif</dd>
+                                        <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.route') !!}</dt>
                                         <dd>
                                             <a href="@if($activity->route != '/')/@endif{{$activity->route}}">
                                                 {{$activity->route}}
                                             </a>
                                         </dd>
-                                        <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.agent') !!}</dt>
+                                        <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.agent') !!}</dt>
                                         <dd>
                                             <i class="fa {{ $platformIcon }} fa-fw" aria-hidden="true">
                                                 <span class="sr-only">
@@ -217,25 +217,25 @@
                                                 </small>
                                             </sup>
                                         </dd>
-                                        <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.locale') !!}</dt>
+                                        <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.locale') !!}</dt>
                                         <dd>
                                             {{ $langDetails }}
                                         </dd>
-                                        <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.referer') !!}</dt>
+                                        <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.referer') !!}</dt>
                                         <dd>
                                             <a href="{{ $activity->referer }}">
                                                 {{ $activity->referer }}
                                             </a>
                                         </dd>
-                                        <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.methodType') !!}</dt>
+                                        <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.methodType') !!}</dt>
                                         <dd>
                                             <span class="badge badge-{{$methodClass}}">
                                                 {{ $activity->methodType }}
                                             </span>
                                         </dd>
-                                        <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.timePassed') !!}</dt>
+                                        <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.timePassed') !!}</dt>
                                         <dd>{{$timePassed}}</dd>
-                                        <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.createdAt') !!}</dt>
+                                        <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.createdAt') !!}</dt>
                                         <dd>{{$activity->created_at}}</dd>
                                     </dl>
                                 </li>
@@ -246,11 +246,11 @@
                         <div class="col-md-6 col-lg-4">
                             <ul class="list-group">
                                 <li class="list-group-item @if($isClearedEntry) list-group-item-danger @else active @endif">
-                                    {!! trans('LaravelLogger::laravel-logger.drilldown.title-ip-details') !!}
+                                    {!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.title-ip-details') !!}
                                 </li>
                                 <li class="list-group-item">
                                     <dl class="dl-horizontal">
-                                        <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.ip') !!}</dt>
+                                        <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.ip') !!}</dt>
                                         <dd>{{$activity->ipAddress}}</dd>
                                         @if($ipAddressDetails)
                                             @foreach($ipAddressDetails as $ipAddressDetailKey => $ipAddressDetailValue)
@@ -271,21 +271,21 @@
                         <div class="col-md-12 col-lg-4">
                             <ul class="list-group">
                                 <li class="list-group-item @if($isClearedEntry) list-group-item-danger @else active @endif">
-                                    {!! trans('LaravelLogger::laravel-logger.drilldown.title-user-details') !!}
+                                    {!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.title-user-details') !!}
                                 </li>
                                 <li class="list-group-item">
                                     <dl class="dl-horizontal">
-                                        <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.userType') !!}</dt>
+                                        <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.userType') !!}</dt>
                                         <dd>
                                             <span class="badge badge-{{$userTypeClass}}">
                                                 {{$activity->userType}}
                                             </span>
                                         </dd>
                                         @if($userDetails)
-                                            <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.userId') !!}</dt>
+                                            <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.userId') !!}</dt>
                                             <dd>{{ $userDetails->$userIdField }}</dd>
-                                            @if(config('LaravelLogger.rolesEnabled'))
-                                                <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.labels.userRoles') !!}</dt>
+                                            @if(config('LaravelActivityTracker.rolesEnabled'))
+                                                <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.labels.userRoles') !!}</dt>
                                                   @foreach ($userDetails->roles as $user_role)
                                                     @if ($user_role->name == 'User')
                                                       @php $labelClass = 'primary' @endphp
@@ -298,30 +298,30 @@
                                                     @endif
                                                     <dd>
                                                         <span class="badge badge-{{$labelClass}}">
-                                                            {{ $user_role->name }} - {!! trans('LaravelLogger::laravel-logger.drilldown.labels.userLevel') !!} {{ $user_role->level }}
+                                                            {{ $user_role->name }} - {!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.labels.userLevel') !!} {{ $user_role->level }}
                                                         </span>
                                                     </dd>
                                                   @endforeach
                                             @endif
-                                            <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.userName') !!}</dt>
+                                            <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.userName') !!}</dt>
                                             <dd>{{$userDetails->name}}</dd>
-                                            <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.userEmail') !!}</dt>
+                                            <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.userEmail') !!}</dt>
                                             <dd>
                                                 <a href="mailto:{{$userDetails->email}}">
                                                     {{$userDetails->email}}
                                                 </a>
                                             </dd>
                                             @if($userDetails->last_name || $userDetails->first_name)
-                                                <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.userFulltName') !!}</dt>
+                                                <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.userFulltName') !!}</dt>
                                                 <dd>{{$userDetails->last_name}}, {{$userDetails->first_name}}</dd>
                                             @endif
                                             @if($userDetails->signup_ip_address)
-                                                <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.userSignupIp') !!}</dt>
+                                                <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.userSignupIp') !!}</dt>
                                                 <dd>{{$userDetails->signup_ip_address}}</dd>
                                             @endif
-                                            <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.userCreatedAt') !!}</dt>
+                                            <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.userCreatedAt') !!}</dt>
                                             <dd>{{$userDetails->created_at}}</dd>
-                                            <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.userUpdatedAt') !!}</dt>
+                                            <dt>{!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.list-group.labels.userUpdatedAt') !!}</dt>
                                             <dd>{{$userDetails->updated_at}}</dd>
                                         @endif
                                     </dl>
@@ -338,15 +338,15 @@
                     <div class="col-xs-12 col-12">
                         <ul class="list-group">
                             <li class="list-group-item list-group-item-info">
-                                {!! trans('LaravelLogger::laravel-logger.drilldown.title-user-activity') !!}
-                                @if(! config('LaravelLogger.loggerCursorPaginationEnabled'))
+                                {!! trans('LaravelActivityTracker::laravel-activity-tracker.drilldown.title-user-activity') !!}
+                                @if(! config('LaravelActivityTracker.loggerCursorPaginationEnabled'))
                                     <span class="badge">
-                                        {{ $totalUserActivities }} {!! trans('LaravelLogger::laravel-logger.dashboard.subtitle') !!}
+                                        {{ $totalUserActivities }} {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.subtitle') !!}
                                     </span>
                                 @endif
                             </li>
                             <li class="list-group-item">
-                                @include('LaravelLogger::logger.partials.activity-table', ['activities' => $userActivities])
+                                @include('LaravelActivityTracker::logger.partials.activity-table', ['activities' => $userActivities])
                             </li>
                         </ul>
                         <br />

@@ -1,9 +1,9 @@
 <?php
 
-namespace jeremykenedy\LaravelLogger\App\Listeners;
+namespace Dimer47\LaravelActivityTracker\App\Listeners;
 
 use Illuminate\Auth\Events\Authenticated;
-use jeremykenedy\LaravelLogger\App\Http\Traits\ActivityLogger;
+use Dimer47\LaravelActivityTracker\App\Http\Traits\ActivityLogger;
 
 class LogAuthenticated
 {
@@ -28,8 +28,8 @@ class LogAuthenticated
      */
     public function handle(Authenticated $event)
     {
-        if (config('LaravelLogger.logAllAuthEvents')) {
-            $this->activity(trans('LaravelLogger::laravel-logger.listenerTypes.auth'));
+        if (config('LaravelActivityTracker.logAllAuthEvents')) {
+            $this->activity(trans('LaravelActivityTracker::laravel-activity-tracker.listenerTypes.auth'));
         }
     }
 }

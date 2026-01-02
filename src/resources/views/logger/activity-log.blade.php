@@ -1,47 +1,47 @@
-@extends(config('LaravelLogger.loggerBladeExtended'))
+@extends(config('LaravelActivityTracker.loggerBladeExtended'))
 
-@if(config('LaravelLogger.bladePlacement') == 'yield')
-@section(config('LaravelLogger.bladePlacementCss'))
-@elseif (config('LaravelLogger.bladePlacement') == 'stack')
-@push(config('LaravelLogger.bladePlacementCss'))
+@if(config('LaravelActivityTracker.bladePlacement') == 'yield')
+@section(config('LaravelActivityTracker.bladePlacementCss'))
+@elseif (config('LaravelActivityTracker.bladePlacement') == 'stack')
+@push(config('LaravelActivityTracker.bladePlacementCss'))
 @endif
 
-@include('LaravelLogger::partials.styles')
+@include('LaravelActivityTracker::partials.styles')
 
-@if(config('LaravelLogger.bladePlacement') == 'yield')
+@if(config('LaravelActivityTracker.bladePlacement') == 'yield')
 @endsection
-@elseif (config('LaravelLogger.bladePlacement') == 'stack')
+@elseif (config('LaravelActivityTracker.bladePlacement') == 'stack')
 @endpush
 @endif
 
-@if(config('LaravelLogger.bladePlacement') == 'yield')
-@section(config('LaravelLogger.bladePlacementJs'))
-@elseif (config('LaravelLogger.bladePlacement') == 'stack')
-@push(config('LaravelLogger.bladePlacementJs'))
+@if(config('LaravelActivityTracker.bladePlacement') == 'yield')
+@section(config('LaravelActivityTracker.bladePlacementJs'))
+@elseif (config('LaravelActivityTracker.bladePlacement') == 'stack')
+@push(config('LaravelActivityTracker.bladePlacementJs'))
 @endif
 
-@include('LaravelLogger::partials.scripts', ['activities' => $activities])
-@include('LaravelLogger::scripts.confirm-modal', ['formTrigger' => '#confirmDelete'])
+@include('LaravelActivityTracker::partials.scripts', ['activities' => $activities])
+@include('LaravelActivityTracker::scripts.confirm-modal', ['formTrigger' => '#confirmDelete'])
 
 
 
-@if(config('LaravelLogger.enableDrillDown'))
-@include('LaravelLogger::scripts.clickable-row')
-@include('LaravelLogger::scripts.tooltip')
+@if(config('LaravelActivityTracker.enableDrillDown'))
+@include('LaravelActivityTracker::scripts.clickable-row')
+@include('LaravelActivityTracker::scripts.tooltip')
 @endif
 
-@if(config('LaravelLogger.bladePlacement') == 'yield')
+@if(config('LaravelActivityTracker.bladePlacement') == 'yield')
 @endsection
-@elseif (config('LaravelLogger.bladePlacement') == 'stack')
+@elseif (config('LaravelActivityTracker.bladePlacement') == 'stack')
 @endpush
 @endif
 
 @section('template_title')
-    {{ trans('LaravelLogger::laravel-logger.dashboard.title') }}
+    {{ trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.title') }}
 @endsection
 
 @php
-    switch (config('LaravelLogger.bootstapVersion')) {
+    switch (config('LaravelActivityTracker.bootstapVersion')) {
         case '4':
         $containerClass = 'card';
         $containerHeaderClass = 'card-header';
@@ -53,22 +53,26 @@
         $containerHeaderClass = 'panel-heading';
         $containerBodyClass = 'panel-body';
     }
-    $bootstrapCardClasses = (is_null(config('LaravelLogger.bootstrapCardClasses')) ? '' : config('LaravelLogger.bootstrapCardClasses'));
+    $bootstrapCardClasses = (is_null(config('LaravelActivityTracker.bootstrapCardClasses')) ? '' : config('LaravelActivityTracker.bootstrapCardClasses'));
 @endphp
 
 @section('content')
 
     <div class="container-fluid">
 
-       @if(config('LaravelLogger.enableLiveSearch'))
-       @include('LaravelLogger::partials.form-live-search')
+       @if(config('LaravelActivityTracker.enableLiveSearch'))
+       @include('LaravelActivityTracker::partials.form-live-search')
        @endif
 
-       @if(config('LaravelLogger.enableSearch'))
-       @include('LaravelLogger::partials.form-search')
+       @if(config('LaravelActivityTracker.enableSearch'))
+       @include('LaravelActivityTracker::partials.form-search')
        @endif
-       @if(config('LaravelLogger.enablePackageFlashMessageBlade'))
-       @include('LaravelLogger::partials.form-status')
+       @if(config('LaravelActivityTracker.enablePackageFlashMessageBlade'))
+       @include('LaravelActivityTracker::partials.form-status')
+       @endif
+
+       @if(config('LaravelActivityTracker.enableDateFiltering') || config('LaravelActivityTracker.enableExport'))
+       @include('LaravelActivityTracker::partials.filter-export-form')
        @endif
 
         <div class="row">
@@ -77,14 +81,14 @@
                     <div class="{{ $containerHeaderClass }}">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
-                            @if(config('LaravelLogger.enableSubMenu'))
+                            @if(config('LaravelActivityTracker.enableSubMenu'))
 
                             <span>
-                                {!! trans('LaravelLogger::laravel-logger.dashboard.title') !!}
-                                @if(! config('LaravelLogger.loggerCursorPaginationEnabled'))
+                                {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.title') !!}
+                                @if(! config('LaravelActivityTracker.loggerCursorPaginationEnabled'))
                                     <small>
                                         <sup class="label label-default">
-                                            {{ $totalActivities }} {!! trans('LaravelLogger::laravel-logger.dashboard.subtitle') !!}
+                                            {{ $totalActivities }} {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.subtitle') !!}
                                         </sup>
                                     </small>
                                 @endif
@@ -94,26 +98,26 @@
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-ellipsis-v fa-fw" aria-hidden="true"></i>
                                     <span class="sr-only">
-                                        {!! trans('LaravelLogger::laravel-logger.dashboard.menu.alt') !!}
+                                        {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.menu.alt') !!}
                                     </span>
                                 </button>
-                                @if(config('LaravelLogger.bootstapVersion') == '4')
+                                @if(config('LaravelActivityTracker.bootstapVersion') == '4')
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    @include('LaravelLogger::forms.clear-activity-log')
+                                    @include('LaravelActivityTracker::forms.clear-activity-log')
                                     <a href="{{route('cleared')}}" class="dropdown-item">
                                         <i class="fa fa-fw fa-history" aria-hidden="true"></i>
-                                        {!! trans('LaravelLogger::laravel-logger.dashboard.menu.show') !!}
+                                        {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.menu.show') !!}
                                     </a>
                                 </div>
                                 @else
                                 <ul class="dropdown-menu dropdown-menu-right">
                                     <li class="dropdown-item">
-                                        @include('LaravelLogger::forms.clear-activity-log')
+                                        @include('LaravelActivityTracker::forms.clear-activity-log')
                                     </li>
                                     <li class="dropdown-item">
                                         <a href="{{route('cleared')}}">
                                             <i class="fa fa-fw fa-history" aria-hidden="true"></i>
-                                            {!! trans('LaravelLogger::laravel-logger.dashboard.menu.show') !!}
+                                            {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.menu.show') !!}
                                         </a>
                                     </li>
                                 </ul>
@@ -121,12 +125,12 @@
                             </div>
 
                             @else
-                            {!! trans('LaravelLogger::laravel-logger.dashboard.title') !!}
-                                @if(! config('LaravelLogger.loggerCursorPaginationEnabled'))
+                            {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.title') !!}
+                                @if(! config('LaravelActivityTracker.loggerCursorPaginationEnabled'))
                                     <span class="pull-right label label-default">
                                         {{ $totalActivities }}
                                         <span class="hidden-sms">
-                                            {!! trans('LaravelLogger::laravel-logger.dashboard.subtitle') !!}
+                                            {!! trans('LaravelActivityTracker::laravel-activity-tracker.dashboard.subtitle') !!}
                                         </span>
                                     </span>
                                 @endif
@@ -135,17 +139,17 @@
                         </div>
                     </div>
                     <div class="{{ $containerBodyClass }}">
-                        @include('LaravelLogger::logger.partials.activity-table', ['activities' => $activities, 'hoverable' => true])
+                        @include('LaravelActivityTracker::logger.partials.activity-table', ['activities' => $activities, 'hoverable' => true])
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-@if(config('LaravelLogger.enableLiveSearch'))
-@include('LaravelLogger::scripts.live-search-script')
+@if(config('LaravelActivityTracker.enableLiveSearch'))
+@include('LaravelActivityTracker::scripts.live-search-script')
 @endif
 
-@include('LaravelLogger::modals.confirm-modal', ['formTrigger' => 'confirmDelete', 'modalClass' => 'danger', 'actionBtnIcon' => 'fa-trash-o'])
+@include('LaravelActivityTracker::modals.confirm-modal', ['formTrigger' => 'confirmDelete', 'modalClass' => 'danger', 'actionBtnIcon' => 'fa-trash-o'])
 
 @endsection

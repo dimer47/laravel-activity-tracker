@@ -1,9 +1,9 @@
 <?php
 
-namespace jeremykenedy\LaravelLogger\App\Listeners;
+namespace Dimer47\LaravelActivityTracker\App\Listeners;
 
 use Illuminate\Auth\Events\Logout;
-use jeremykenedy\LaravelLogger\App\Http\Traits\ActivityLogger;
+use Dimer47\LaravelActivityTracker\App\Http\Traits\ActivityLogger;
 
 class LogSuccessfulLogout
 {
@@ -28,8 +28,8 @@ class LogSuccessfulLogout
      */
     public function handle(Logout $event)
     {
-        if (config('LaravelLogger.logSuccessfulLogout')) {
-            $this->activity(trans('LaravelLogger::laravel-logger.listenerTypes.logout'));
+        if (config('LaravelActivityTracker.logSuccessfulLogout')) {
+            $this->activity(trans('LaravelActivityTracker::laravel-activity-tracker.listenerTypes.logout'));
         }
     }
 }

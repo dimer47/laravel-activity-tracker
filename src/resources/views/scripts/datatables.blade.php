@@ -1,5 +1,5 @@
-<script type="text/javascript" src="{{config('LaravelLogger.loggerDatatablesJScdn')}}"></script>
-<script type="text/javascript" src="{{config('LaravelLogger.loggerDatatablesJSVendorCdn')}}"></script>
+<script type="text/javascript" src="{{config('LaravelActivityTracker.loggerDatatablesJScdn')}}"></script>
+<script type="text/javascript" src="{{config('LaravelActivityTracker.loggerDatatablesJSVendorCdn')}}"></script>
 <script type="text/javascript">
     $(function() {
         $('.data-table').dataTable({

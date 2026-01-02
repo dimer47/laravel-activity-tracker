@@ -1,9 +1,9 @@
 <?php
 
-namespace jeremykenedy\LaravelLogger\App\Listeners;
+namespace Dimer47\LaravelActivityTracker\App\Listeners;
 
 use Illuminate\Auth\Events\PasswordReset;
-use jeremykenedy\LaravelLogger\App\Http\Traits\ActivityLogger;
+use Dimer47\LaravelActivityTracker\App\Http\Traits\ActivityLogger;
 
 class LogPasswordReset
 {
@@ -28,8 +28,8 @@ class LogPasswordReset
      */
     public function handle(PasswordReset $event)
     {
-        if (config('LaravelLogger.logPasswordReset')) {
-            $this->activity(trans('LaravelLogger::laravel-logger.listenerTypes.reset'));
+        if (config('LaravelActivityTracker.logPasswordReset')) {
+            $this->activity(trans('LaravelActivityTracker::laravel-activity-tracker.listenerTypes.reset'));
         }
     }
 }

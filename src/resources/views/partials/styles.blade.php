@@ -1,15 +1,15 @@
 
 
-@if(config('LaravelLogger.enableBootstrapCssCDN'))
-    <link rel="stylesheet" type="text/css" href="{{config('LaravelLogger.bootstrapCssCDN')}}">
+@if(config('LaravelActivityTracker.enableBootstrapCssCDN'))
+    <link rel="stylesheet" type="text/css" href="{{config('LaravelActivityTracker.bootstrapCssCDN')}}">
 @endif
 
-@if(config('LaravelLogger.loggerDatatables'))
-    <link rel="stylesheet" type="text/css" href="{{config('LaravelLogger.loggerDatatablesCSScdn')}}">
+@if(config('LaravelActivityTracker.loggerDatatables'))
+    <link rel="stylesheet" type="text/css" href="{{config('LaravelActivityTracker.loggerDatatablesCSScdn')}}">
 @endif
 
-@if(config('LaravelLogger.enableFontAwesomeCDN'))
-    <link rel="stylesheet" type="text/css" href="{{config('LaravelLogger.fontAwesomeCDN')}}">
+@if(config('LaravelActivityTracker.enableFontAwesomeCDN'))
+    <link rel="stylesheet" type="text/css" href="{{config('LaravelActivityTracker.fontAwesomeCDN')}}">
 @endif
 
 <style type="text/css" media="screen">

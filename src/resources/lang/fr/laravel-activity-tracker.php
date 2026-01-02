@@ -176,4 +176,32 @@ return [
         'countText' => 'Affichage de :firstItem - :lastItem sur :total resultats <small>(:perPage par page)</small>',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Laravel Logger Filter & Export Language Lines
+    |--------------------------------------------------------------------------
+    */
+    'filterAndExport'   => 'Filtrer & Exporter',
+    'fromDate'          => 'Date de début',
+    'toDate'            => 'Date de fin',
+    'quickPeriod'       => 'Période rapide',
+    'allTime'           => 'Tout',
+    'today'             => 'Aujourd\'hui',
+    'yesterday'         => 'Hier',
+    'last7Days'         => '7 derniers jours',
+    'last30Days'        => '30 derniers jours',
+    'last3Months'       => '3 derniers mois',
+    'last6Months'       => '6 derniers mois',
+    'lastYear'          => 'Année dernière',
+    'description'       => 'Description',
+    'searchDescription' => 'Rechercher description...',
+    'user'              => 'Utilisateur',
+    'allUsers'          => 'Tous les utilisateurs',
+    'filter'            => 'Filtrer',
+    'clearFilters'      => 'Effacer les filtres',
+    'exportData'        => 'Exporter les données',
+    'exportCSV'         => 'Exporter CSV',
+    'exportJSON'        => 'Exporter JSON',
+    'exportExcel'       => 'Exporter Excel',
+
 ];

@@ -1,9 +1,9 @@
 <?php
 
-namespace jeremykenedy\LaravelLogger\App\Listeners;
+namespace Dimer47\LaravelActivityTracker\App\Listeners;
 
 use Illuminate\Auth\Events\Lockout;
-use jeremykenedy\LaravelLogger\App\Http\Traits\ActivityLogger;
+use Dimer47\LaravelActivityTracker\App\Http\Traits\ActivityLogger;
 
 class LogLockout
 {
@@ -28,8 +28,8 @@ class LogLockout
      */
     public function handle(Lockout $event)
     {
-        if (config('LaravelLogger.logLockOut')) {
-            $this->activity(trans('LaravelLogger::laravel-logger.listenerTypes.lockout'));
+        if (config('LaravelActivityTracker.logLockOut')) {
+            $this->activity(trans('LaravelActivityTracker::laravel-activity-tracker.listenerTypes.lockout'));
         }
     }
 }

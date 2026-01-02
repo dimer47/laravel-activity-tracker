@@ -1,10 +1,10 @@
 <?php
 
-namespace jeremykenedy\LaravelLogger\App\Http\Middleware;
+namespace Dimer47\LaravelActivityTracker\App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use jeremykenedy\LaravelLogger\App\Http\Traits\ActivityLogger;
+use Dimer47\LaravelActivityTracker\App\Http\Traits\ActivityLogger;
 
 class LogActivity
 {
@@ -20,7 +20,7 @@ class LogActivity
      */
     public function handle($request, Closure $next, $description = null)
     {
-        if (config('LaravelLogger.loggerMiddlewareEnabled') && $this->shouldLog($request)) {
+        if (config('LaravelActivityTracker.loggerMiddlewareEnabled') && $this->shouldLog($request)) {
             $this->activity($description);
         }
 
@@ -36,7 +36,7 @@ class LogActivity
      */
     protected function shouldLog($request)
     {
-        foreach (config('LaravelLogger.loggerMiddlewareExcept', []) as $except) {
+        foreach (config('LaravelActivityTracker.loggerMiddlewareExcept', []) as $except) {
             if ($except !== '/') {
                 $except = trim($except, '/');
             }

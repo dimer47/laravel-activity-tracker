@@ -1,6 +1,6 @@
 <?php
 
-namespace jeremykenedy\LaravelLogger\App\Http\Traits;
+namespace Dimer47\LaravelActivityTracker\App\Http\Traits;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -21,40 +21,40 @@ trait ActivityLogger
      */
     public function activity($description = null, $details = null, array $rel = null)
     {
-        $userType = trans('LaravelLogger::laravel-logger.userTypes.guest');
+        $userType = trans('LaravelActivityTracker::laravel-activity-tracker.userTypes.guest');
         $userId = null;
 
         if (Auth::check()) {
-            $userType = trans('LaravelLogger::laravel-logger.userTypes.registered');
-            $userIdField = config('LaravelLogger.defaultUserIDField');
+            $userType = trans('LaravelActivityTracker::laravel-activity-tracker.userTypes.registered');
+            $userIdField = config('LaravelActivityTracker.defaultUserIDField');
             $userId = Request::user()->{$userIdField};
         }
 
         if (Crawler::isCrawler()) {
-            $userType = trans('LaravelLogger::laravel-logger.userTypes.crawler');
+            $userType = trans('LaravelActivityTracker::laravel-activity-tracker.userTypes.crawler');
             if (is_null($description)) {
-                $description = $userType.' '.trans('LaravelLogger::laravel-logger.verbTypes.crawled').' '.Request::fullUrl();
+                $description = $userType.' '.trans('LaravelActivityTracker::laravel-activity-tracker.verbTypes.crawled').' '.Request::fullUrl();
             }
         }
 
         if (!$description) {
             switch (strtolower(Request::method())) {
                 case 'post':
-                    $verb = trans('LaravelLogger::laravel-logger.verbTypes.created');
+                    $verb = trans('LaravelActivityTracker::laravel-activity-tracker.verbTypes.created');
                     break;
 
                 case 'patch':
                 case 'put':
-                    $verb = trans('LaravelLogger::laravel-logger.verbTypes.edited');
+                    $verb = trans('LaravelActivityTracker::laravel-activity-tracker.verbTypes.edited');
                     break;
 
                 case 'delete':
-                    $verb = trans('LaravelLogger::laravel-logger.verbTypes.deleted');
+                    $verb = trans('LaravelActivityTracker::laravel-activity-tracker.verbTypes.deleted');
                     break;
 
                 case 'get':
                 default:
-                    $verb = trans('LaravelLogger::laravel-logger.verbTypes.viewed');
+                    $verb = trans('LaravelActivityTracker::laravel-activity-tracker.verbTypes.viewed');
                     break;
             }
 
@@ -92,10 +92,10 @@ trait ActivityLogger
         ];
 
         // Validation Instance
-        $validator = Validator::make($data, config('LaravelLogger.defaultActivityModel')::rules());
+        $validator = Validator::make($data, config('LaravelActivityTracker.defaultActivityModel')::rules());
         if ($validator->fails()) {
             $errors = self::prepareErrorMessage($validator->errors(), $data);
-            if (config('LaravelLogger.logDBActivityLogFailuresToFile')) {
+            if (config('LaravelActivityTracker.logDBActivityLogFailuresToFile')) {
                 Log::error('Failed to record activity event. Failed Validation: '.$errors);
             }
         } else {
@@ -112,7 +112,7 @@ trait ActivityLogger
      */
     private static function storeActivity($data)
     {
-        config('LaravelLogger.defaultActivityModel')::create([
+        config('LaravelActivityTracker.defaultActivityModel')::create([
             'description'   => $data['description'],
             'details'       => $data['details'],
             'userType'      => $data['userType'],
