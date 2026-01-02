@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Dimer47\LaravelActivityTracker\App\Http\Traits\IpAddressDetails;
 use Dimer47\LaravelActivityTracker\App\Http\Traits\UserAgentDetails;
+use Dimer47\LaravelActivityTracker\App\Exports\ActivityExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ActivityTrackerController extends BaseController
 {
@@ -463,6 +465,15 @@ class ActivityTrackerController extends BaseController
     public function exportActivityLog(Request $request)
     {
         $format = $request->get('format', 'csv');
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+
+        // For Excel, use optimized FromQuery export
+        if ($format === 'excel') {
+            return $this->exportToExcel($startDate, $endDate);
+        }
+
+        // For CSV and JSON, use the existing logic
         $activities = config('LaravelActivityTracker.defaultActivityModel')::orderBy('created_at', 'desc');
 
         // Apply date filtering
@@ -483,8 +494,6 @@ class ActivityTrackerController extends BaseController
                 return $this->exportToCsv($activities);
             case 'json':
                 return $this->exportToJson($activities);
-            case 'excel':
-                return $this->exportToExcel($activities);
             default:
                 return redirect()->back()->with('error', 'Invalid export format');
         }
@@ -594,65 +603,15 @@ class ActivityTrackerController extends BaseController
     /**
      * Export activities to Excel format.
      *
-     * @param mixed $activities
+     * @param string|null $startDate
+     * @param string|null $endDate
      *
-     * @return \Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    private function exportToExcel($activities)
+    private function exportToExcel(?string $startDate = null, ?string $endDate = null)
     {
         $filename = 'activity_log_'.now()->format('Y-m-d_H-i-s').'.xlsx';
 
-        // For Excel export, we'll use a simple CSV format with .xlsx extension
-        // In a real implementation, you might want to use Laravel Excel package
-        $headers = [
-            'Content-Type'        => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
-        ];
-
-        $callback = function () use ($activities): void {
-            $file = fopen('php://output', 'w');
-
-            // Excel Headers
-            fputcsv($file, [
-                'ID',
-                'Description',
-                'Details',
-                'User Type',
-                'User ID',
-                'User Email',
-                'Route',
-                'IP Address',
-                'User Agent',
-                'Locale',
-                'Referer',
-                'Method Type',
-                'Created At',
-                'Updated At',
-            ]);
-
-            // Excel Data
-            foreach ($activities as $activity) {
-                fputcsv($file, [
-                    $activity->id,
-                    $activity->description,
-                    $activity->details,
-                    $activity->userType,
-                    $activity->userId,
-                    $activity->userDetails ? $activity->userDetails->email : 'N/A',
-                    $activity->route,
-                    $activity->ipAddress,
-                    $activity->userAgent,
-                    $activity->locale,
-                    $activity->referer,
-                    $activity->methodType,
-                    $activity->created_at,
-                    $activity->updated_at,
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return Excel::download(new ActivityExport($startDate, $endDate), $filename);
     }
 }
